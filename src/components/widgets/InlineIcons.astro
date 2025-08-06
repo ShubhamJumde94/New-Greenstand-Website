@@ -1,0 +1,97 @@
+---
+export interface Props {
+  name?: string;
+  class?: string;
+  size?: string;
+  rawSvg?: string;
+}
+
+const { name, class: className = '', size, rawSvg } = Astro.props;
+
+// Helper function to parse SVG and extract properties
+function parseSvg(svgString: string) {
+  const viewBoxMatch = svgString.match(/viewBox="([^"]*)"/);
+  const widthMatch = svgString.match(/width="([^"]*)"/) || svgString.match(/width='([^']*)'/);
+  const heightMatch = svgString.match(/height="([^"]*)"/) || svgString.match(/height='([^']*)'/);
+
+  // Extract content between <svg> tags
+  const contentMatch = svgString.match(/<svg[^>]*>(.*?)<\/svg>/s);
+  const content = contentMatch ? contentMatch[1].trim() : '';
+
+  const viewBox = viewBoxMatch ? viewBoxMatch[1] : '0 0 24 24';
+  const defaultSize = widthMatch ? widthMatch[1] : heightMatch ? heightMatch[1] : '24';
+
+  return {
+    viewBox,
+    defaultSize,
+    content,
+  };
+}
+
+const icons = {
+  hamburgerIcon: {
+    viewBox: '0 0 24 24',
+    defaultSize: '24',
+    content: `
+      <path d="M21.375 12C21.375 12.2984 21.2565 12.5845 21.0455 12.7955C20.8345 13.0065 20.5484 13.125 20.25 13.125H3.75C3.45163 13.125 3.16548 13.0065 2.9545 12.7955C2.74353 12.5845 2.625 12.2984 2.625 12C2.625 11.7016 2.74353 11.4155 2.9545 11.2045C3.16548 10.9935 3.45163 10.875 3.75 10.875H20.25C20.5484 10.875 20.8345 10.9935 21.0455 11.2045C21.2565 11.4155 21.375 11.7016 21.375 12ZM3.75 7.125H20.25C20.5484 7.125 20.8345 7.00647 21.0455 6.7955C21.2565 6.58452 21.375 6.29837 21.375 6C21.375 5.70163 21.2565 5.41548 21.0455 5.2045C20.8345 4.99353 20.5484 4.875 20.25 4.875H3.75C3.45163 4.875 3.16548 4.99353 2.9545 5.2045C2.74353 5.41548 2.625 5.70163 2.625 6C2.625 6.29837 2.74353 6.58452 2.9545 6.7955C3.16548 7.00647 3.45163 7.125 3.75 7.125ZM20.25 16.875H3.75C3.45163 16.875 3.16548 16.9935 2.9545 17.2045C2.74353 17.4155 2.625 17.7016 2.625 18C2.625 18.2984 2.74353 18.5845 2.9545 18.7955C3.16548 19.0065 3.45163 19.125 3.75 19.125H20.25C20.5484 19.125 20.8345 19.0065 21.0455 18.7955C21.2565 18.5845 21.375 18.2984 21.375 18C21.375 17.7016 21.2565 17.4155 21.0455 17.2045C20.8345 16.9935 20.5484 16.875 20.25 16.875Z" fill="#B58900"/>
+    `,
+  },
+  GreenstandLogo: {
+    viewBox: '0 0 32 32',
+    defaultSize: '32',
+    content: `
+      <rect width="32" height="32" rx="8" fill="#10443A"/>
+        <path d="M23.0246 11.8447C21.2171 12.6519 19.5748 13.8343 18.2209 15.3389C18.3599 15.9851 18.4672 16.6442 18.532 17.3181C18.813 20.245 18.3355 23.0681 17.2646 25.5992H20.0439C20.9901 24.5412 21.7953 23.3263 22.4108 21.9656C23.9109 18.6491 24.0349 15.065 23.0246 11.8447Z" fill="white"/>
+  <path d="M11.6313 6.39941C9.23242 9.67063 7.98173 13.7931 8.39924 18.1419C8.66258 20.8849 9.56177 23.4134 10.9363 25.5994H15.7689C16.8397 23.0681 17.3172 20.2451 17.0362 17.3182C16.6186 12.9694 14.6062 9.15822 11.6313 6.39941Z" fill="white"/>
+  <path d="M18.3185 12.7778C19.4355 12.7778 20.341 11.8818 20.341 10.7766C20.341 9.6714 19.4355 8.77539 18.3185 8.77539C17.2014 8.77539 16.2959 9.6714 16.2959 10.7766C16.2959 11.8818 17.2014 12.7778 18.3185 12.7778Z" fill="white"/>
+</svg>
+    `,
+  },
+
+     NewGreenstandLogo: {
+     viewBox: '0 0 32 32',
+     defaultSize: '32',
+     content: `
+       <rect width="32" height="32" rx="8" fill="#10443A"/>
+       <path d="M23.0246 11.8447C21.2171 12.6519 19.5748 13.8343 18.2209 15.3389C18.3599 15.9851 18.4672 16.6442 18.532 17.3181C18.813 20.245 18.3355 23.0681 17.2646 25.5992H20.0439C20.9901 24.5412 21.7953 23.3263 22.4108 21.9656C23.9109 18.6491 24.0349 15.065 23.0246 11.8447Z" fill="white"/>
+       <path d="M11.6313 6.39941C9.23242 9.67063 7.98173 13.7931 8.39924 18.1419C8.66258 20.8849 9.56177 23.4134 10.9363 25.5994H15.7689C16.8397 23.0681 17.3172 20.2451 17.0362 17.3182C16.6186 12.9694 14.6062 9.15822 11.6313 6.39941Z" fill="white"/>
+       <path d="M18.3185 12.7778C19.4355 12.7778 20.341 11.8818 20.341 10.7766C20.341 9.6714 19.4355 8.77539 18.3185 8.77539C17.2014 8.77539 16.2959 9.6714 16.2959 10.7766C16.2959 11.8818 17.2014 12.7778 18.3185 12.7778Z" fill="white"/>
+     `,
+   },
+  /* 
+  PASTE NEW SVGs HERE - Example:
+  
+  myNewIcon: `<svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+    <path d="..." fill="currentColor"/>
+  </svg>`,
+  
+  */
+};
+
+// Handle rawSvg prop for immediate use
+let selectedIcon;
+if (rawSvg) {
+  selectedIcon = parseSvg(rawSvg);
+} else if (name && icons[name]) {
+  selectedIcon = icons[name];
+} else {
+  // Default fallback
+  selectedIcon = {
+    viewBox: '0 0 24 24',
+    defaultSize: '24',
+    content: '<rect width="24" height="24" fill="currentColor"/>',
+  };
+}
+
+const iconSize = size || selectedIcon.defaultSize;
+---
+
+<svg
+  width={iconSize}
+  height={iconSize}
+  viewBox={selectedIcon.viewBox}
+  fill="none"
+  xmlns="http://www.w3.org/2000/svg"
+  class={className}
+  set:html={selectedIcon.content}
+/>

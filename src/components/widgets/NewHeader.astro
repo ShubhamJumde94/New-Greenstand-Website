@@ -1,0 +1,97 @@
+---
+import { Icon } from 'astro-icon/components';
+import Logo from '~/components/Logo.astro';
+import NewGreenstandLogo from '~/components/widgets/InlineIcons.astro';
+
+interface MenuLink {
+  text: string;
+  href: string;
+}
+
+export interface Props {
+  id?: string;
+  links?: Array<MenuLink>;
+}
+
+const {
+  id = 'newheader',
+  links = [
+    { text: 'About Us', href: '/about' },
+    { text: 'Products', href: '/products' },
+    { text: 'Contribute', href: '/contribute' },
+    { text: 'Community', href: '/community' },
+    { text: 'Contact Us', href: '/contact' },
+  ],
+} = Astro.props;
+---
+
+<header
+  class="bg-neutral-100 box-border flex flex-row gap-2 items-start justify-start pb-2 pt-8 px-[72px] w-full"
+  {...id ? { id } : {}}
+>
+  <div
+    class="basis-0 bg-white grow h-full min-h-px min-w-px relative rounded-[64px] shrink-0 shadow-[0px_4px_4px_0px_rgba(211,217,207,0.15)] border border-[#d3d9cf]/50"
+  >
+    <div class="box-border flex flex-row items-start justify-start overflow-hidden px-[72px] py-0 w-full h-full">
+      <div
+        class="basis-0 box-border flex flex-row gap-2 grow h-full items-center justify-start min-h-px min-w-px px-0 py-[13.333px] relative rounded-[13.333px] shrink-0"
+      >
+        <!-- Logo Section -->
+        <div class="w-[100%] h-[100%] flex items-center gap-1 rounded-[8px] justify-start">
+          <NewGreenstandLogo name="NewGreenstandLogo" />
+          <span class="font-montserrat font-bold text-[#10443A] text-[24px]">Greenstand</span>
+        </div>
+
+        <!-- Navigation Menu -->
+        <nav
+          class="box-border flex flex-row font-medium gap-[30px] h-full items-center justify-start leading-none p-0 relative shrink-0 text-[#10443a] text-[16px] text-left"
+        >
+          {
+            links.map(({ text, href }) => (
+              <div class="relative shrink-0">
+                <a
+                  href={href}
+                  class="block leading-[1.5] text-nowrap whitespace-pre hover:text-[#196B5C] hover:underline transition-all duration-200 cursor-pointer px-2 py-1 rounded"
+                >
+                  {text}
+                </a>
+              </div>
+            ))
+          }
+        </nav>
+      </div>
+    </div>
+  </div>
+
+  <style>
+    /* Ensure the General Sans font loads properly */
+    header nav {
+      font-family: 'General Sans Variable', 'Inter Variable', system-ui, sans-serif;
+      font-weight: 500;
+    }
+
+    /* Mobile responsiveness */
+    @media (max-width: 768px) {
+      header {
+        padding-left: 1rem;
+        padding-right: 1rem;
+      }
+
+      header > div > div {
+        padding-left: 1.5rem;
+        padding-right: 1.5rem;
+      }
+
+      nav {
+        display: none;
+      }
+    }
+
+    @media (max-width: 1024px) {
+      nav {
+        gap: 20px;
+        font-size: 14px;
+      }
+    }
+  </style>
+</header>
